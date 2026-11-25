@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+
+<title>Earn Cash</title>
+
+<!-- Telegram Mini App SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- Monetag SDK -->
+<script
+ src="https://libtl.com/sdk.js"
+ data-zone="12341336"
+ data-sdk="show_12341336">
+</script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+*{
+ margin:0;
+ padding:0;
+ box-sizing:border-box;
+ font-family:Arial,sans-serif;
+}
+
+body{
+ background:#0f172a;
+ color:white;
+ padding-bottom:90px;
+}
+
+.header{
+ padding:20px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.profile{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+.avatar{
+ width:45px;
+ height:45px;
+ border-radius:50%;
+ background:#22c55e;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-weight:bold;
+}
+
+.balance-card{
+ margin:15px;
+ padding:25px;
+ border-radius:25px;
+ background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+
+.balance{
+ font-size:40px;
+ font-weight:bold;
+ margin-top:10px;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+ padding:15px;
+}
+
+.box{
+ background:#1e293b;
+ padding:20px;
+ border-radius:18px;
+ text-align:center;
+}
+
+.watch-btn{
+ width:100%;
+ padding:16px;
+ border:none;
+ border-radius:15px;
+ background:#22c55e;
+ color:white;
+ font-size:18px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.watch-btn:disabled{
+ background:#64748b;
+ cursor:not-allowed;
+}
+
+.bottom-nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ width:100%;
+ height:70px;
+ background:#111827;
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+ border-top:1px solid #334155;
+}
+
+.nav-btn{
+ background:none;
+ border:none;
+ color:#94a3b8;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ font-size:12px;
+ cursor:pointer;
+}
+
+.nav-btn i{
+ font-size:22px;
+ margin-bottom:4px;
+}
+
+.active{
+ color:#22c55e;
+}
+
+.page{
+ display:none;
+}
+
+.page.active-page{
+ display:block;
+}
+
+.status{
+ text-align:center;
+ padding:12px;
+ color:#94a3b8;
+ font-size:14px;
+}
+
+.ref-code{
+ color:#22c55e;
+ font-size:24px;
+ font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+
+<div id="home" class="page active-page">
+
+<div class="header">
+
+<div class="profile">
+<div class="avatar">E</div>
+<div>
+<b>Emran</b><br>
+<small>Premium User</small>
+</div>
+</div>
+
+<i class="fa-solid fa-bell"></i>
+
+</div>
+
+<div class="balance-card">
+<p>Total Balance</p>
+<div class="balance" id="balance">0</div>
+<small>Available Coins</small>
+</div>
+
+<div class="grid">
+
+<div class="box">
+<h3>Ads Watched</h3>
+<h2 id="ads">0</h2>
+</div>
+
+<div class="box">
+<h3>Referral</h3>
+<h2>0</h2>
+</div>
+
+</div>
+
+<div style="padding:15px;">
+
+<button class="watch-btn" id="watchBtn"
+onclick="watchAd()">
+<i class="fa-solid fa-play"></i>
+Watch Rewarded Ad
+</button>
+
+<div class="status" id="status">
+Ready to watch ads
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WALLET -->
+
+<div id="wallet" class="page">
+
+<div class="header">
+<h2>My Wallet</h2>
+</div>
+
+<div class="balance-card">
+<h3>Current Balance</h3>
+<div class="balance" id="walletBalance">0</div>
+<small>Available Coins</small>
+</div>
+
+<div class="box" style="margin:15px;">
+<h3>Withdrawal</h3>
+<br>
+<p>Withdrawal system coming soon.</p>
+</div>
+
+</div>
+
+
+<!-- REFER -->
+
+<div id="refer" class="page">
+
+<div class="header">
+<h2>Refer & Earn</h2>
+</div>
+
+<div class="box" style="margin:15px;">
+
+<h3>Your Referral Code</h3>
+<br>
+
+<div class="ref-code">EMRAN123</div>
+
+<br>
+
+<button class="watch-btn" onclick="copyCode()">
+<i class="fa-solid fa-copy"></i>
+Copy Code
+</button>
+
+</div>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div id="profile" class="page">
+
+<div class="header">
+<h2>My Profile</h2>
+</div>
+
+<div class="box" style="margin:15px;">
+
+<div class="avatar" style="margin:auto;">E</div>
+
+<br>
+
+<h3>Emran</h3>
+
+<br>
+
+<p>Status: Active</p>
+
+<br>
+
+<p>Account Type: Premium</p>
+
+</div>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<div class="bottom-nav">
+
+<button class="nav-btn active"
+onclick="showPage('home',this)">
+
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+
+</button>
+
+<button class="nav-btn"
+onclick="showPage('wallet',this)">
+
+<i class="fa-solid fa-wallet"></i>
+<span>Wallet</span>
+
+</button>
+
+<button class="nav-btn"
+onclick="showPage('refer',this)">
+
+<i class="fa-solid fa-user-group"></i>
+<span>Refer</span>
+
+</button>
+
+<button class="nav-btn"
+onclick="showPage('profile',this)">
+
+<i class="fa-solid fa-user"></i>
+<span>Profile</span>
+
+</button>
+
+</div>
+
+
+<script>
+
+// Telegram Initialization
+
+if (window.Telegram &&
+    window.Telegram.WebApp) {
+
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+}
+
+
+// Load Saved Data
+
+let balance =
+Number(localStorage.getItem("balance")) || 0;
+
+let ads =
+Number(localStorage.getItem("ads")) || 0;
+
+let isWatching = false;
+
+
+// Update UI
+
+function updateUI(){
+
+ document.getElementById("balance").innerText =
+ balance;
+
+ document.getElementById("walletBalance").innerText =
+ balance;
+
+ document.getElementById("ads").innerText =
+ ads;
+
+}
+
+
+// Watch Rewarded Ad
+
+async function watchAd(){
+
+ if(isWatching) return;
+
+ const btn = document.getElementById("watchBtn");
+ const status = document.getElementById("status");
+
+ if(typeof window.show_12341336 !== "function"){
+
+    status.innerText =
+    "Ad SDK not loaded. Please try again.";
+
+    return;
+ }
+
+ isWatching = true;
+
+ btn.disabled = true;
+
+ btn.innerHTML =
+ '<i class="fa-solid fa-spinner fa-spin"></i> Loading Ad...';
+
+ status.innerText =
+ "Please wait. Loading advertisement...";
+
+ try{
+
+    const result = await window.show_12341336({
+        type: "end",
+        requestVar: "watch_button"
+    });
+
+    if(result?.reward_event_type === "valued"){
+
+        balance += 10;
+        ads += 1;
+
+        localStorage.setItem(
+            "balance",
+            balance
+        );
+
+        localStorage.setItem(
+            "ads",
+            ads
+        );
+
+        updateUI();
+
+        status.innerText =
+        "Congratulations! You received 10 coins.";
+
+    }else{
+
+        status.innerText =
+        "No valid rewarded ad. No coins added.";
+
+    }
+
+ }catch(error){
+
+    console.error("Monetag Error:",error);
+
+    status.innerText =
+    "Ad unavailable. Please try again later.";
+
+ }finally{
+
+    isWatching = false;
+
+    btn.disabled = false;
+
+    btn.innerHTML =
+    '<i class="fa-solid fa-play"></i> Watch Rewarded Ad';
+
+ }
+
+}
+
+
+// Navigation
+
+function showPage(id,btn){
+
+ document.querySelectorAll(".page")
+ .forEach(page=>{
+    page.classList.remove("active-page");
+ });
+
+ document.getElementById(id)
+ .classList.add("active-page");
+
+ document.querySelectorAll(".nav-btn")
+ .forEach(button=>{
+    button.classList.remove("active");
+ });
+
+ btn.classList.add("active");
+
+}
+
+
+// Copy Referral Code
+
+function copyCode(){
+
+ if(navigator.clipboard){
+
+    navigator.clipboard.writeText("EMRAN123")
+    .then(()=>{
+        alert("Referral code copied!");
+    })
+    .catch(()=>{
+        alert("Copy failed!");
+    });
+
+ }else{
+
+    alert("Please copy: EMRAN123");
+
+ }
+
+}
+
+
+// Initial UI
+
+updateUI();
+
+</script>
+
+</body>
+</html>
